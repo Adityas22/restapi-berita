@@ -33,12 +33,24 @@ class PostController extends Controller
     // }
 
     public function store(Request $request){
+        // return $request->file;
         $validateData = $request->validate([
             'title' => 'required',
             'content' => 'required',
+            'image'   => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
-        $request['author'] = Auth::user()->id;
-        $post = Post::create($request->all());
+
+        if ($request->hasFile('image')) {
+            // Simpan ke folder public/post-images
+            $validateData['image'] = $request->file('image')->store('post-images', 'public');
+        }
+        
+        // $request['author'] = Auth::user()->id;
+        // $post = Post::create($request->all());
+        // Simpan ID user login
+        $validateData['author'] = Auth::id();
+        // Simpan ke database menggunakan data yang sudah divalidasi
+        $post = Post::create($validateData);
         return new PostDetailResource($post->load('writer:id,name'));
         // return response()->json('berhasil');
     }
