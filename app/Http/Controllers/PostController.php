@@ -16,7 +16,7 @@ class PostController extends Controller
         $posts = Post::all();
         // return response()->json(['data'=> $posts]);
         // ngembaliin data array pakai colecction
-        return PostDetailResource::collection($posts->loadMissing('writer:id,name'));
+        return PostDetailResource::collection($posts->loadMissing('writer:id,name', 'comments.commentator:id,name'));
     }
 
 

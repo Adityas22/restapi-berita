@@ -5,6 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Carbon\Carbon;
+use Dom\Comment;
 
 class PostDetailResource extends JsonResource
 {
@@ -23,7 +24,10 @@ class PostDetailResource extends JsonResource
             'created_at' => Carbon::parse($this->created_at)->format('Y-m-d'),
             'author' => $this->author,
             // eiger loading, menggunakan whenLoaded untuk relationship saja
-            'writer' => $this->whenLoaded('writer')
+            'writer' => $this->whenLoaded('writer'),
+             // Tambahkan total komentar
+            'total_comments' => $this->whenLoaded('comments', fn() => $this->comments->count()),
+            'comments'=>CommentResource::collection($this->whenLoaded('comments'))
         ];
     }
 }
