@@ -35,7 +35,7 @@ class AuthController extends Controller
     }
 
     public function logout(Request $request){
-        $request->user()->currentAccessToken()->delete();
+        $request->user()->currentAccessToken();
         return response([
             'message' => 'Logout Success'
         ]);
@@ -44,4 +44,25 @@ class AuthController extends Controller
     public function me(Request $request){
         return $request->user();
     }
+
+    public function register(Request $request)
+    {
+        $request->validate([
+            'name' => 'required',
+            'username' => 'required|unique:users',
+            'password' => 'required|min:6'
+        ]);
+
+        $user = User::create([
+            'name' => $request->name,
+            'username' => $request->username,
+            'password' => Hash::make($request->password),
+        ]);
+
+        return response([
+            'message' => 'Register Success',
+            'user' => $user
+        ], 201);
+    }
+
 }
