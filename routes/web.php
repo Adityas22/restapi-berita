@@ -21,7 +21,11 @@ Route::get('/register', function () {
     return view('auth.register');
 });
 
-// // Halaman CRUD Post untuk FE
-// Route::get('/posts-view', function () {
-//     return view('posts.index');
-// });
+Route::get('/posts-add', function () {
+    return view('posts.add');
+});
+
+// Edit post
+Route::get('/posts-edit/{id}', function ($id) {
+    return view('posts.edit', ['id' => $id]);
+});

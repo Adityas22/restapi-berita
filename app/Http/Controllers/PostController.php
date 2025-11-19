@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Http\Resources\PostResource;
 use App\Http\Resources\PostDetailResource;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+
 
 use App\Models\Post;
 
@@ -56,28 +58,60 @@ class PostController extends Controller
     }
 
     public function update(Request $request, $id){
-        if ($request->isMethod('patch')) {
-            $request->merge(json_decode($request->getContent(), true));
-        }
+        // if ($request->isMethod('patch')) {
+        //     $request->merge(json_decode($request->getContent(), true));
+        // }
 
+        // $post = Post::findOrFail($id);
+
+        // if ($post->author !== Auth::id()) {
+        //     return response()->json(['message' => 'Anda bukan author'], 403);
+        // }
+
+        // $data = $request->validate([
+        //     'title' => 'sometimes|required|string|max:255',
+        //     'content' => 'sometimes|required|string',
+        // ]);
+
+        // if (!$data) {
+        //     return response()->json(['message' => 'No fields provided for update.'], 422);
+        // }
+
+        // $post->update($data);
+
+        // return new PostDetailResource($post->load('writer:id,name'));
         $post = Post::findOrFail($id);
 
-        if ($post->author !== Auth::id()) {
-            return response()->json(['message' => 'Anda bukan author'], 403);
+    if ($post->author !== Auth::id()) {
+        return response()->json(['message' => 'Anda bukan author'], 403);
+    }
+
+    // NOTE:
+    // `sometimes|required` = field hanya divalidasi jika dikirim
+    $validateData = $request->validate([
+        'title'   => 'sometimes|required|string|max:255',
+        'content' => 'sometimes|required|string',
+        'image'   => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
+    ]);
+
+    // Jika client mengirim file gambar
+    if ($request->hasFile('image')) {
+
+        // Hapus gambar lama jika ada
+        if ($post->image && Storage::disk('public')->exists($post->image)) {
+            Storage::disk('public')->delete($post->image);
         }
 
-        $data = $request->validate([
-            'title' => 'sometimes|required|string|max:255',
-            'content' => 'sometimes|required|string',
-        ]);
+        // Upload gambar baru
+        $validateData['image'] = $request->file('image')->store('post-images', 'public');
+    }
 
-        if (!$data) {
-            return response()->json(['message' => 'No fields provided for update.'], 422);
-        }
+    // Update hanya field yang terkirim
+    $post->update($validateData);
 
-        $post->update($data);
-
-        return new PostDetailResource($post->load('writer:id,name'));
+    return new PostDetailResource(
+        $post->load('writer:id,name','comments')
+    );
     }
 
     public function destroy($id){

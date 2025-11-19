@@ -37,7 +37,7 @@
     if (localStorage.getItem("token")) {
         // Jika sudah login → tampilkan Tambah Berita + Logout
         navRight.innerHTML = `
-            <a href="/posts-view" class="btn btn-sm btn-primary me-2">Tambah Berita</a>
+            <a href="/posts-add" class="btn btn-sm btn-primary me-2">Tambah Berita</a>
             <button onclick="logout()" class="btn btn-sm btn-danger">Logout</button>
         `;
     } else {
