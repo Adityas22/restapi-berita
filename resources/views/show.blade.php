@@ -236,7 +236,7 @@
             const token = localStorage.getItem("token");
 
             await fetch(`http://127.0.0.1/restapi-berita/public/api/comments/${id}`, {
-                method: "PUT",
+                method: "PATCH",
                 headers: {
                     "Content-Type": "application/json",
                     "Authorization": `Bearer ${token}`

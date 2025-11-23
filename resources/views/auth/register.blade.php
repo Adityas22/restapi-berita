@@ -1,27 +1,35 @@
-@extends('layout')
+<!DOCTYPE html>
+<html lang="en">
 
-@section('content')
-    <div class="col-md-4 mx-auto">
-        <div class="card shadow">
-            <div class="card-body">
-                <h3 class="text-center mb-3">Register</h3>
+<head>
+    <meta charset="UTF-8">
+    <title>Register</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-light">
+
+    <div class="col-md-4 mx-auto mt-5">
+        <div class="card shadow-sm border-0">
+            <div class="card-body p-4">
+                <h3 class="text-center mb-4">Register</h3>
 
                 <div class="mb-3">
-                    <label>Nama</label>
-                    <input id="name" class="form-control">
+                    <label class="form-label">Nama</label>
+                    <input id="name" class="form-control" placeholder="Masukkan nama">
                 </div>
 
                 <div class="mb-3">
-                    <label>Username</label>
-                    <input id="username" class="form-control">
+                    <label class="form-label">Username</label>
+                    <input id="username" class="form-control" placeholder="Masukkan username">
                 </div>
 
                 <div class="mb-3">
-                    <label>Password</label>
-                    <input type="password" id="password" class="form-control">
+                    <label class="form-label">Password</label>
+                    <input type="password" id="password" class="form-control" placeholder="Masukkan password">
                 </div>
 
-                <button onclick="register()" class="btn btn-success w-100">Register</button>
+                <button onclick="register()" class="btn btn-success w-100 mt-2">Register</button>
 
                 <p class="mt-3 text-center">
                     Sudah punya akun? <a href="/login">Login</a>
@@ -29,6 +37,7 @@
             </div>
         </div>
     </div>
+
 
     <script>
         async function register() {
@@ -47,11 +56,14 @@
             const json = await res.json();
 
             if (res.status === 201) {
-                alert("Registrasi Berhasil!");
+                alert("Registrasi berhasil!");
                 window.location = "/login";
             } else {
-                alert(JSON.stringify(json));
+                alert(json.message || "Terjadi kesalahan");
             }
         }
     </script>
-@endsection
+
+</body>
+
+</html>

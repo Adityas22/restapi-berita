@@ -19,6 +19,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::patch('/comments/{id}', [CommentController::class, 'update']);
 });
 
+Route::post('/register', [AuthController::class, 'register']);
+
 // contoh route untuk test
 Route::get('/posts', [PostController::class, 'index']);
 Route::get('/posts/{id}', [PostController::class, 'show'] );
